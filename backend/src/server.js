@@ -10,6 +10,18 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: '16kb' }));
 
+app.get('/', (_req, res) => res.json({
+  service: 'WatchWise TV API',
+  status: 'ok',
+  endpoints: {
+    health: '/health',
+    titles: '/api/titles',
+    titleDetails: '/api/titles/:id',
+    genres: '/api/genres',
+    recommendations: 'POST /api/recommendations'
+  },
+  message: 'Backend is running. This endpoint serves API information; it is not the Fire TV application UI.'
+}));
 app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'watchwise-tv-backend', aiConfigured: Boolean(process.env.AI_API_KEY) }));
 app.get('/api/titles', (req, res) => {
   const genre = typeof req.query.genre === 'string' ? req.query.genre : '';
