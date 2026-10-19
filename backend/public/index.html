@@ -84,7 +84,7 @@ function playTitle(id){
  v.onerror=()=>{$("playerNote").textContent="This video host refused playback or the stream is unavailable. Use a direct, browser-compatible MP4/HLS URL or an embeddable YouTube video ID.";};
  v.onloadedmetadata=()=>{$("playerNote").textContent="Ready · "+t.genre+" · "+t.duration+" min";};
  v.oncanplay=()=>{$("playerNote").textContent="Ready to play · "+t.name;};
- if(!t.videoUrl){$("playerNote").textContent=t.trailerSearchUrl?"No specific, embeddable trailer is configured for this title yet. Search links are not playable media; add an official YouTube video ID or an authorized MP4/HLS URL to enable in-app playback.":"No authorized, embeddable video stream is configured for this title yet. Add an official YouTube video ID or an authorized MP4/HLS URL to enable in-app playback.";$("playerDialog").showModal();return;}
+ if(!t.videoUrl){v.classList.add("hidden");frame.classList.add("hidden");$("playerNote").textContent=t.trailerSearchUrl?"Video unavailable in-app: this title has a trailer search link, not a playable video. Add a specific embeddable official YouTube trailer or an authorized MP4/HLS stream.":"Video unavailable in-app: no playable video source is configured for this title. Add an official embeddable YouTube trailer or an authorized MP4/HLS stream.";$("playerDialog").showModal();return;}
  v.src=t.videoUrl;v.load();$("playerDialog").showModal();
  v.play().catch(()=>{$("playerNote").textContent="Press Play to start. Playback remains inside WatchWise TV; if it fails, this stream may block embedding or be unavailable.";});
 }
