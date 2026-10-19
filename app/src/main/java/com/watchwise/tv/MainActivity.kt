@@ -263,14 +263,14 @@ class MainActivity : Activity() {
         WatchTitle("demo-008", "Weekend Wonders", "Family", "A quick, family-friendly demo pick to test the full play flow.", 1, "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4"),
         WatchTitle("demo-009", "Nature Close-Up", "Nature", "A short CC0 flower video sample hosted by MDN.", 1, "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"),
         WatchTitle("demo-010", "HD Sample · 5 MB Plus", "Technology", "An H.264 sample source for catalogue and player testing.", 1, "https://cdn.truefilesize.com/mp4/sample-5mb.mp4"),
-        WatchTitle("trailer-spider-man-bnd", "Spider-Man: Brand New Day — Trailer", "Action", "Official-trailer search for the upcoming Spider-Man film.", 3, "", "https://www.youtube.com/results?search_query=Spider-Man+Brand+New+Day+official+trailer+Sony+Pictures"),
-        WatchTitle("trailer-avengers-doomsday", "Avengers: Doomsday — Trailer", "Action", "Official-trailer search for Marvel Studios' Avengers: Doomsday.", 3, "", "https://www.youtube.com/results?search_query=Avengers+Doomsday+official+trailer+Marvel+Studios"),
-        WatchTitle("trailer-toy-story-5", "Toy Story 5 — Trailer", "Animation", "Official-trailer search for Pixar's Toy Story 5.", 3, "", "https://www.youtube.com/results?search_query=Toy+Story+5+official+trailer+Pixar"),
-        WatchTitle("trailer-moana-2026", "Moana — Trailer", "Adventure", "Official-trailer search for the upcoming Moana movie.", 3, "", "https://www.youtube.com/results?search_query=Moana+2026+official+trailer+Disney"),
-        WatchTitle("trailer-street-fighter", "Street Fighter (2026) — Trailer", "Action", "Official-trailer search for the 2026 Street Fighter movie.", 3, "", "https://www.youtube.com/results?search_query=Street+Fighter+2026+official+trailer+Paramount"),
-        WatchTitle("trailer-hunger-games-sunrise", "The Hunger Games: Sunrise on the Reaping — Trailer", "Drama", "Official-trailer search for the next Hunger Games film.", 3, "", "https://www.youtube.com/results?search_query=Hunger+Games+Sunrise+on+the+Reaping+official+trailer+Lionsgate"),
-        WatchTitle("trailer-zootopia-2", "Zootopia 2 — Trailer", "Animation", "Official-trailer search for Disney Animation's Zootopia 2.", 3, "", "https://www.youtube.com/results?search_query=Zootopia+2+official+trailer+Disney"),
-        WatchTitle("trailer-avengers-endgame-encore", "Avengers: Endgame — Encore Trailer", "Action", "Trailer search for the Endgame Encore release.", 3, "", "https://www.youtube.com/results?search_query=Avengers+Endgame+Encore+official+trailer+Marvel")
+        WatchTitle("trailer-spider-man-bnd", "Spider-Man: Brand New Day — Trailer", "Action", "Official trailer for the upcoming Spider-Man film.", 3, "", "https://www.youtube.com/watch?v=BwntXFBNfOA"),
+        WatchTitle("trailer-avengers-doomsday", "Avengers: Doomsday — Trailer", "Action", "Official trailer for Marvel Studios' Avengers: Doomsday.", 3, "", "https://www.youtube.com/watch?v=fxNh27fRdYA"),
+        WatchTitle("trailer-toy-story-5", "Toy Story 5 — Trailer", "Animation", "Official trailer for Pixar's Toy Story 5.", 3, "", "https://www.youtube.com/watch?v=s_qpMMkvHYE"),
+        WatchTitle("trailer-moana-2026", "Moana — Trailer", "Adventure", "Official trailer for the upcoming Moana movie.", 3, "", "https://www.youtube.com/watch?v=zQjHSoVCQLs"),
+        WatchTitle("trailer-street-fighter", "Street Fighter (2026) — Trailer", "Action", "Official trailer for the 2026 Street Fighter movie.", 3, "", "https://www.youtube.com/results?search_query=Street+Fighter+2026+official+trailer+Paramount"),
+        WatchTitle("trailer-hunger-games-sunrise", "The Hunger Games: Sunrise on the Reaping — Trailer", "Drama", "Official trailer for the next Hunger Games film.", 3, "", "https://www.youtube.com/watch?v=fS35YSjopjE"),
+        WatchTitle("trailer-zootopia-2", "Zootopia 2 — Trailer", "Animation", "Official trailer for Disney Animation's Zootopia 2.", 3, "", "https://www.youtube.com/watch?v=9BF4YfxVcjc"),
+        WatchTitle("trailer-avengers-endgame-encore", "Avengers: Endgame — Encore Trailer", "Action", "Trailer search for the Endgame Encore release.", 3, "", "https://www.youtube.com/watch?v=TcMBFSGVi1c")
     )
 
     override fun onDestroy() { executor.shutdownNow(); super.onDestroy() }
