@@ -243,12 +243,16 @@ class MainActivity : Activity() {
     private fun rounded(color: Int, radius: Int) = GradientDrawable().apply { setColor(color); cornerRadius = radius.toFloat() }
 
     private fun sampleTitles() = listOf(
-        WatchTitle("demo-001", "The Little Inventor", "Education", "A curious young inventor learns through experiments and teamwork.", 8, "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"),
-        WatchTitle("demo-002", "Mountain Quest", "Adventure", "Explore breathtaking landscapes on a light-hearted journey.", 10, "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"),
-        WatchTitle("demo-003", "Ocean Neighbors", "Nature", "Meet fascinating creatures living beneath the waves.", 12, "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"),
-        WatchTitle("demo-004", "Family Game Night", "Family", "A cheerful short about friends solving a puzzle together.", 6, "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"),
-        WatchTitle("demo-005", "Tiny Trailblazers", "Adventure", "Young explorers solve clues in a colourful outdoor adventure.", 14, "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"),
-        WatchTitle("demo-006", "Laugh Lab", "Comedy", "Everyday science turns into a series of funny surprises.", 7, "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4")
+        WatchTitle("demo-001", "Big Buck Bunny", "Animation", "A playful animated short from the Blender open-movie community.", 10, "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_1MB.mp4"),
+        WatchTitle("demo-002", "Elephants Dream", "Sci-Fi", "Step into a surreal, imaginative world in this open animation sample.", 10, "https://media.w3.org/2010/05/sintel/trailer.mp4"),
+        WatchTitle("demo-003", "Flower Stories", "Nature", "A calm close-up nature clip—ideal for testing video playback.", 1, "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"),
+        WatchTitle("demo-004", "Sintel: The Trailer", "Adventure", "A cinematic fantasy trailer with dramatic landscapes and action.", 1, "https://media.w3.org/2010/05/sintel/trailer.mp4"),
+        WatchTitle("demo-005", "Big Buck Bunny · Compact", "Comedy", "A lightweight 360p sample clip for slower connections and quick demos.", 1, "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4"),
+        WatchTitle("demo-006", "Sintel: Fantasy Worlds", "Fantasy", "A short look at a richly imagined fantasy world.", 1, "https://media.w3.org/2010/05/sintel/trailer.mp4"),
+        WatchTitle("demo-007", "Ocean of Possibilities", "Documentary", "A cinematic sample clip for testing discovery and playback.", 1, "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"),
+        WatchTitle("demo-008", "Weekend Wonders", "Family", "A quick, family-friendly demo pick to test the full play flow.", 1, "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4"),
+        WatchTitle("demo-009", "Creative Lab", "Education", "A lightweight clip for validating the player and controls.", 1, "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"),
+        WatchTitle("demo-010", "The Next Frontier", "Sci-Fi", "Explore a speculative world through a cinematic trailer sample.", 1, "https://media.w3.org/2010/05/sintel/trailer.mp4")
     )
 
     override fun onDestroy() { executor.shutdownNow(); super.onDestroy() }
