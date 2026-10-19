@@ -18,6 +18,7 @@ app.use(helmet({
       "style-src": ["'self'", "'unsafe-inline'"],
       "img-src": ["'self'", "data:", "https:"],
       "media-src": ["'self'", "https:", "blob:"],
+      "frame-src": ["https://www.youtube-nocookie.com", "https://www.youtube.com"],
       "connect-src": ["'self'", "https:"],
       "font-src": ["'self'", "data:", "https:"],
       "object-src": ["'none'"],
