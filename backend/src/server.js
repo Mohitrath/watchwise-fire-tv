@@ -78,14 +78,37 @@ app.get('/api/trending-series', async (_req, res) => {
         popularity: Number(show.popularity || 0),
         poster: show.poster_path ? `https://image.tmdb.org/t/p/w500${show.poster_path}` : null,
         backdrop: show.backdrop_path ? `https://image.tmdb.org/t/p/w780${show.backdrop_path}` : null,
-        analysis: Number(show.vote_average || 0) >= 7.5 ? 'Strong audience score' : Number(show.vote_average || 0) >= 6 ? 'Mixed-to-positive audience score' : 'Audience score is still developing'
-      }))
+        analysis: Number(show.vote_average || 0) >= 7.5 ? 'Strong audience score' : Number(show.vote_average || 0) >= 6 ? 'Mixed-to-positive audience score' : 'Audience score is still developing',
+        trailerUrl: null      }))
     });
   } catch (error) {
     console.error('Trending series fetch failed:', error.message);
     return res.status(502).json({ error: 'Trending series are temporarily unavailable.' });
   }
 });
+
+app.get('/api/trending-series/:id/trailer', async (req, res) => {
+  const apiKey = process.env.TMDB_API_KEY;
+  const id = String(req.params.id || '');
+  if (!apiKey) return res.status(503).json({ error: 'TMDB_API_KEY is not configured' });
+  if (!/^\\d{1,12}$/.test(id)) return res.status(400).json({ error: 'Invalid series ID' });
+  try {
+    const response = await fetch(`https://api.themoviedb.org/3/tv/${encodeURIComponent(id)}/videos?api_key=${encodeURIComponent(apiKey)}&language=en-US`, { signal: AbortSignal.timeout(8000) });
+    if (!response.ok) throw new Error(`TMDB returned HTTP ${response.status}`);
+    const payload = await response.json();
+    const videos = Array.isArray(payload.results) ? payload.results : [];
+    const video = videos.find(v => v.site === 'YouTube' && v.type === 'Trailer' && v.official && v.key)
+      || videos.find(v => v.site === 'YouTube' && v.type === 'Trailer' && v.key)
+      || videos.find(v => v.site === 'YouTube' && v.key);
+    if (!video) return res.status(404).json({ error: 'No YouTube trailer is listed for this series.' });
+    res.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+    return res.json({ id: video.key, name: video.name || 'Trailer', site: 'YouTube', url: `https://www.youtube.com/watch?v=${video.key}` });
+  } catch (error) {
+    console.error('Trailer lookup failed:', error.message);
+    return res.status(502).json({ error: 'Trailer lookup is temporarily unavailable.' });
+  }
+});
+
 
 
 function localRecommendations({ genres = [], maxDurationMinutes = 15 }) {
