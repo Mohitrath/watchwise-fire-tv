@@ -50,6 +50,44 @@ app.get('/api/titles/:id', (req, res) => {
 });
 app.get('/api/genres', (_req, res) => res.json({ genres: [...new Set(titles.map(t => t.genre))] }));
 
+app.get('/api/trending-series', async (_req, res) => {
+  const apiKey = process.env.TMDB_API_KEY;
+  if (!apiKey) return res.status(503).json({
+    error: 'TMDB_API_KEY is not configured',
+    message: 'Add a TMDB API key in your deployment environment to enable live trending series.'
+  });
+  try {
+    const response = await fetch(`https://api.themoviedb.org/3/trending/tv/day?api_key=${encodeURIComponent(apiKey)}&language=en-US`, {
+      signal: AbortSignal.timeout(8000)
+    });
+    if (!response.ok) throw new Error(`TMDB returned HTTP ${response.status}`);
+    const payload = await response.json();
+    const results = Array.isArray(payload.results) ? payload.results : [];
+    res.set('Cache-Control', 'public, s-maxage=900, stale-while-revalidate=3600');
+    return res.json({
+      source: 'TMDB',
+      updatedAt: new Date().toISOString(),
+      results: results.slice(0, 20).map((show, index) => ({
+        id: show.id,
+        rank: index + 1,
+        name: show.name || show.original_name || 'Untitled series',
+        overview: show.overview || 'No synopsis is available yet.',
+        firstAirDate: show.first_air_date || '',
+        rating: Number(show.vote_average || 0),
+        voteCount: Number(show.vote_count || 0),
+        popularity: Number(show.popularity || 0),
+        poster: show.poster_path ? `https://image.tmdb.org/t/p/w500${show.poster_path}` : null,
+        backdrop: show.backdrop_path ? `https://image.tmdb.org/t/p/w780${show.backdrop_path}` : null,
+        analysis: Number(show.vote_average || 0) >= 7.5 ? 'Strong audience score' : Number(show.vote_average || 0) >= 6 ? 'Mixed-to-positive audience score' : 'Audience score is still developing'
+      }))
+    });
+  } catch (error) {
+    console.error('Trending series fetch failed:', error.message);
+    return res.status(502).json({ error: 'Trending series are temporarily unavailable.' });
+  }
+});
+
+
 function localRecommendations({ genres = [], maxDurationMinutes = 15 }) {
   const requested = Array.isArray(genres) ? genres.filter(x => typeof x === 'string').slice(0, 8) : [];
   const max = Number.isFinite(Number(maxDurationMinutes)) ? Math.min(240, Math.max(1, Number(maxDurationMinutes))) : 15;
