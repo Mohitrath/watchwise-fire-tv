@@ -227,13 +227,31 @@ async function loadTrendingSeries(){
    const rating=Number(s.rating||0).toFixed(1);
    const poster=s.poster?'<img loading="lazy" alt="" src="'+esc(s.poster)+'">':"";
    const overview=esc(s.overview||"No synopsis available.");
-   return '<article class="trend-card"><div class="trend-art">'+poster+'<span class="trend-rank">#'+esc(s.rank)+'</span></div><div class="trend-body"><h3 class="trend-title">'+esc(s.name)+'</h3><div class="trend-meta"><span>'+esc(date)+'</span><span class="trend-rating">★ '+esc(rating)+'</span></div><div class="trend-analysis">'+esc(s.analysis)+' · '+esc(Number(s.voteCount||0).toLocaleString())+' votes</div><p class="trend-overview">'+overview+'</p><a href="https://www.themoviedb.org/tv/'+encodeURIComponent(s.id)+'" target="_blank" rel="noopener noreferrer">Full series analysis ↗</a></div></article>';
+   return '<article class="trend-card"><div class="trend-art">'+poster+'<span class="trend-rank">#'+esc(s.rank)+'</span></div><div class="trend-body"><h3 class="trend-title">'+esc(s.name)+'</h3><div class="trend-meta"><span>'+esc(date)+'</span><span class="trend-rating">★ '+esc(rating)+'</span></div><div class="trend-analysis">'+esc(s.analysis)+' · '+esc(Number(s.voteCount||0).toLocaleString())+' votes</div><p class="trend-overview">'+overview+'</p><div class="tile-actions"><button class="primary" type="button" data-series-trailer="'+esc(s.id)+'" data-series-name="'+esc(s.name)+'">▶ Watch trailer</button><a href="https://www.themoviedb.org/tv/'+encodeURIComponent(s.id)+'" target="_blank" rel="noopener noreferrer">Series details ↗</a></div></div></article>';
   }).join("");
- }catch(e){
+  grid.querySelectorAll("[data-series-trailer]").forEach(button=>button.addEventListener("click",()=>playSeriesTrailer(button.dataset.seriesTrailer,button.dataset.seriesName,button)));
+  }catch(e){
   status.classList.add("error");
   status.innerHTML='Live chart needs a TMDB API key in the backend environment. Add <code>TMDB_API_KEY</code> in Vercel → Project Settings → Environment Variables, then redeploy. Until then, <a href="https://www.justwatch.com/in/streaming-charts?t=shows" target="_blank" rel="noopener noreferrer">view current India streaming charts ↗</a>.';
   updated.innerHTML='<span class="live-dot"></span> SETUP NEEDED';
  }
+}
+
+async function playSeriesTrailer(id,name,button){
+ const frame=$("trailerFrame"),video=$("video");
+ button.disabled=true;button.textContent="Finding trailer…";
+ try{
+  const data=await api("/api/trending-series/"+encodeURIComponent(id)+"/trailer");
+  if(!data.id)throw new Error("No YouTube trailer found for this series.");
+  video.pause();video.classList.add("hidden");frame.classList.remove("hidden");
+  frame.src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(data.id)+"?playsinline=1&autoplay=0&rel=0";
+  $("playerTitle").textContent=name+" — Trailer";
+  $("playerNote").textContent="Official/available YouTube trailer embedded in WatchWise TV.";
+  $("trailerFallback").classList.remove("hidden");
+  $("openTrailerExternal").onclick=()=>window.open(data.url,"_blank","noopener,noreferrer");
+  $("playerDialog").showModal();
+ }catch(e){notify(e.message||"No trailer available for this series.");}
+ finally{button.disabled=false;button.textContent="▶ Watch trailer";}
 }
 
 async function load(){
