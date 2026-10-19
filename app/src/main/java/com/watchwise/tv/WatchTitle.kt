@@ -6,5 +6,6 @@ data class WatchTitle(
     val genre: String,
     val description: String,
     val durationMinutes: Int,
-    val videoUrl: String
+    val videoUrl: String,
+    val trailerUrl: String = ""
 )
