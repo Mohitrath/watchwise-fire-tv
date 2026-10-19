@@ -1,8 +1,14 @@
 {
   "version": 2,
   "functions": {
-    "src/server.js": {
+    "api/[...path].js": {
       "includeFiles": "public/**"
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/health",
+      "destination": "/api/health"
+    }
+  ]
 }
