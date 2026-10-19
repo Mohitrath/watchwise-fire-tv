@@ -1,8 +1,8 @@
 # WatchWise TV
 
-WatchWise TV is a Fire OS-oriented TV discovery demo built with Kotlin and Android's native UI APIs. It includes remote-friendly controls, a sample catalogue, search, genre filters, locally persisted favourites, Media3 playback, and an optional Node.js recommendation API with deterministic fallback recommendations.
+WatchWise TV is a Fire OS-oriented discovery experience with two connected surfaces: a native Kotlin/Android app for Fire TV devices and a responsive browser preview served by the Node.js backend. Both use the same catalogue and recommendation API. Features include D-pad-friendly controls, search, genre filters, locally persisted favourites, Media3 playback, and deterministic fallback recommendations with optional server-side AI.
 
-> **Status:** This is an implementation starter. It has not yet been verified on a physical Fire TV device or a Fire TV simulator. Build, install, remote navigation, and playback must be tested on the target platform before claiming hackathon compliance.
+> **Verification status:** The source and deployment wiring have been updated, but a successful Android build, browser end-to-end test, and Fire TV device/simulator run still need to be confirmed. Do not claim target-platform compliance until those checks are complete.
 
 ## Features
 
@@ -17,7 +17,7 @@ WatchWise TV is a Fire OS-oriented TV discovery demo built with Kotlin and Andro
 ## Project structure
 
 - `app/` — native Android/Kotlin Fire OS app.
-- `backend/` — optional Express API and recommendation service.
+- `backend/` — Express API, recommendation service, and responsive browser preview (`backend/public/index.html`).
 - `docs/` — architecture, testing, and product-feedback notes.
 
 ## Requirements
@@ -33,12 +33,24 @@ WatchWise TV is a Fire OS-oriented TV discovery demo built with Kotlin and Andro
 1. Open the repository root in Android Studio.
 2. Allow Gradle sync to finish and install any requested SDK components.
 3. Select the `app` run configuration and build/run it on a compatible emulator or target Fire TV device.
-4. For a command-line build, run `gradle assembleDebug` from the repository root if Gradle is installed. Add a Gradle Wrapper through Android Studio if you want `gradlew.bat assembleDebug` on Windows.
+4. For a command-line build, install Gradle 8.9 and run `gradle assembleDebug` from the repository root. A GitHub Actions workflow also builds the debug APK and uploads it as an artifact on pushes and pull requests.
 5. The debug APK is normally generated at `app/build/outputs/apk/debug/app-debug.apk`.
 
 A standard Android emulator is useful for development, but does **not** prove Fire TV compliance. Final testing must be on the intended Fire TV platform or accepted Fire TV/Vega simulator.
 
-## Run the optional backend
+## Browser preview and deployed API
+
+The Vercel project serves the visual browser preview at the root URL and the JSON API under `/api/*`:
+
+- Browser preview: https://watchwise-fire-tv.vercel.app/
+- Health: https://watchwise-fire-tv.vercel.app/health
+- Catalogue: https://watchwise-fire-tv.vercel.app/api/titles
+- Genres: https://watchwise-fire-tv.vercel.app/api/genres
+- API information: https://watchwise-fire-tv.vercel.app/api-info
+
+The native Fire TV app defaults to the deployed HTTPS backend and fetches `/api/titles` at launch. Use **Backend settings** to change the base URL. If the network is unavailable, the built-in sample catalogue remains available.
+
+## Run the backend locally
 
 ```bash
 cd backend
