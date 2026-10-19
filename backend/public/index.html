@@ -233,7 +233,8 @@ async function loadTrendingSeries(){
   updated.innerHTML='<span class="live-dot"></span> SETUP NEEDED';
  }
 }
-\nasync function load(){
+
+async function load(){
  $("status").textContent="Connecting to catalogue…";
  try {
   const data=await api("/api/titles");
