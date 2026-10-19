@@ -1,136 +1,126 @@
+<!--
+  WatchWise TV — project showcase
+  Keep screenshot files in docs/screenshots/ and preserve these relative paths.
+-->
 <div align="center">
 
 <img src="docs/watchwise-banner.svg" alt="WatchWise TV — Less scrolling. More watching." width="100%"/>
 
-<br/>
+# WATCHWISE TV
+### Less scrolling. More watching.
 
-### Your next great watch, without the endless scroll.
-
-**WatchWise TV** is a TV-first discovery experience built around a native Kotlin/Android app for Fire TV and a browser preview powered by a shared Node.js API.
+A streaming-discovery dashboard for finding what to watch, exploring trending series, saving favorites, and getting quick recommendations — with a browser preview and a native Fire TV / Android client.
 
 <p>
-  <a href="https://watchwise-fire-tv.vercel.app/"><strong>↗ Open the live preview</strong></a>
-  &nbsp;·&nbsp;
-  <a href="docs/fire-tv-demo-guide.md">Fire TV demo guide</a>
-  &nbsp;·&nbsp;
-  <a href="#-get-started">Get started</a>
+  <a href="https://watchwise-fire-tv.vercel.app/"><strong>🚀 Open the live preview</strong></a>
+  &nbsp; · &nbsp;
+  <a href="#-screenshots">View screenshots</a>
+  &nbsp; · &nbsp;
+  <a href="#-run-locally">Run locally</a>
 </p>
 
 <p>
-  <img src="https://img.shields.io/badge/platform-Fire%20TV%20prototype-0B7285?style=for-the-badge&logo=amazonfiretv&logoColor=white" alt="Fire TV prototype"/>
-  <img src="https://img.shields.io/badge/native-Kotlin%20%2F%20Android-3B7A57?style=for-the-badge&logo=kotlin&logoColor=white" alt="Kotlin Android"/>
-  <img src="https://img.shields.io/badge/backend-Node.js%20%2B%20Express-3C873A?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js Express"/>
-  <img src="https://img.shields.io/badge/license-MIT-596579?style=for-the-badge" alt="MIT license"/>
+  <img src="https://img.shields.io/badge/Platform-Fire%20TV%20%7C%20Web-7C5CFA?style=for-the-badge" alt="Fire TV and web"/>
+  <img src="https://img.shields.io/badge/Frontend-HTML%20%7C%20CSS%20%7C%20JS-2D8CFF?style=for-the-badge" alt="Frontend stack"/>
+  <img src="https://img.shields.io/badge/API-Node.js%20%2B%20Express-3C873A?style=for-the-badge" alt="Node and Express"/>
+  <img src="https://img.shields.io/badge/Trending-TMDB-01B4E4?style=for-the-badge" alt="TMDB"/>
+  <img src="https://img.shields.io/badge/License-MIT-596579?style=for-the-badge" alt="MIT license"/>
 </p>
-
-> **Project status:** This is an actively developed demo. Build success, end-to-end browser behavior, and final Fire TV device/simulator compatibility still need to be verified. The banner is an original project illustration, not a screenshot of a validated device run.
 
 </div>
 
 ---
 
-## ✦ The idea
+## ✦ The experience
 
-TV time should feel like choosing—not searching.
+WatchWise is designed to make choosing something to watch feel effortless. Browse a catalogue, filter by industry and genre, save favorites, explore live TV-series trends, and open available YouTube trailers without leaving the discovery flow.
 
-WatchWise brings discovery controls into one calm, remote-friendly interface: explore a catalogue, narrow it by genre, save favorites, open a title, and ask for a few relevant picks. A shared API powers the native app and the browser preview, while a built-in sample catalogue helps the interface remain useful when the backend cannot be reached.
+### What you can do
+
+| Feature | What it does |
+|---|---|
+| **Live trending series** | Fetches trending TV titles from TMDB, with posters, ratings, vote counts, release years, and short score analysis. |
+| **Trailer playback** | Looks up available YouTube trailers and embeds them in the WatchWise player. Some titles may not have a trailer listed. |
+| **Catalogue discovery** | Browse Movies and Series, search titles and descriptions, and filter by genre or movie industry. |
+| **Favorites** | Save titles locally in the browser for quick return visits. |
+| **Recommendations** | Get a short list based on genre and duration preferences. Local recommendations work without an AI key. |
+| **Streaming shortcuts** | Open external streaming services; availability and playback remain controlled by each provider. |
+| **Resilient demo mode** | The browser UI can fall back to sample content when the API cannot be reached. |
+
+## 🖼️ Screenshots
+
+The screenshots below document the current browser experience: the cinematic home screen, live trending-series cards, streaming-service shortcuts, and catalogue filters.
+
+> **Screenshot assets:** Place the four supplied images in `docs/screenshots/` using the filenames below. The image links are intentionally repository-relative so they work on GitHub and in local clones once those files are committed.
 
 <table>
-<tr>
-<td width="50%" valign="top">
-
-### 🎮 Made for the couch
-
-- Large, focus-visible controls
-- D-pad-friendly navigation patterns
-- Search and genre filtering
-- Favorites stored locally
-- Details and video playback flow
-
-</td>
-<td width="50%" valign="top">
-
-### ✨ Discovery with a fallback
-
-- Shared catalogue API
-- Short-list recommendations
-- Deterministic recommendations without an AI key
-- Optional server-side AI provider
-- Built-in sample catalogue for offline/demo fallback
-
-</td>
-</tr>
+  <tr>
+    <td width="50%">
+      <strong>01 · Home & discovery</strong><br/>
+      <img src="docs/screenshots/01-home.png" alt="WatchWise TV home screen with cinematic hero and discovery actions" width="100%"/>
+    </td>
+    <td width="50%">
+      <strong>02 · Trending series</strong><br/>
+      <img src="docs/screenshots/02-trending-series.png" alt="Live trending series cards with posters, ratings, summaries, and trailer buttons" width="100%"/>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <strong>03 · Streaming shortcuts</strong><br/>
+      <img src="docs/screenshots/03-streaming-platforms.png" alt="Streaming platform shortcuts and search controls" width="100%"/>
+    </td>
+    <td width="50%">
+      <strong>04 · Catalogue & filters</strong><br/>
+      <img src="docs/screenshots/04-catalogue-filters.png" alt="Movie catalogue with industry and genre filters" width="100%"/>
+    </td>
+  </tr>
 </table>
 
-## 🧭 Experience map
-
-| Step | What happens |
-|---|---|
-| **Discover** | Browse titles from the catalogue or built-in demo data. |
-| **Narrow it down** | Search by title, genre, or description and filter by category. |
-| **Keep it close** | Save favorites locally for quick access. |
-| **Get a nudge** | Request recommendations based on genre and duration preferences. |
-| **Press play** | Open the player and try the configured sample stream. |
-
-## 🏗️ How it fits together
+## 🧭 How it works
 
 ```mermaid
-flowchart LR
-    TV["📺 Native Fire TV app<br/>Kotlin / Android"] --> API["Express API<br/>Catalogue + recommendations"]
-    WEB["🌐 Browser preview<br/>HTML / CSS / JavaScript"] --> API
-    API --> CAT["Sample catalogue"]
-    API -. "Optional" .-> AI["AI-compatible provider"]
-    TV -. "Network fallback" .-> LOCAL["Built-in sample catalogue"]
+flowchart TD
+    WEB["Browser preview<br/>HTML · CSS · JavaScript"]
+    TV["Native TV client<br/>Kotlin · Android"]
+    API["Node.js / Express API"]
+    CATALOGUE["Sample catalogue"]
+    TMDB["TMDB API<br/>Trending TV + video lookup"]
+    AI["Optional AI-compatible API"]
+    YT["YouTube embedded player"]
+
+    WEB --> API
+    TV --> API
+    API --> CATALOGUE
+    API --> TMDB
+    API -. "Optional recommendations" .-> AI
+    WEB --> YT
 ```
 
-The API is designed to return local recommendations when no AI provider is configured or the AI request fails. Provider credentials belong on the backend—never in the Android client.
+The browser calls the API on the same origin. TMDB provides trending series and associated video metadata; trailer playback uses YouTube's embedded player. The project does not download or rehost YouTube videos.
 
 ## 🧰 Tech stack
 
 | Layer | Technology |
 |---|---|
-| Native TV client | Kotlin, Android |
-| Playback | AndroidX Media3 |
-| Web preview | HTML, CSS, JavaScript |
-| API | Node.js 18+, Express |
-| HTTP/security middleware | CORS, Helmet |
-| Optional recommendations | OpenAI-compatible Chat Completions API |
-| Hosting | Vercel configuration included |
-| Automation | GitHub Actions Android build workflow |
+| Browser UI | HTML, CSS, JavaScript |
+| Backend | Node.js 18+, Express |
+| Security / middleware | Helmet, CORS |
+| Trending titles and trailer metadata | TMDB API |
+| Trailer playback | YouTube embedded player |
+| Native TV client | Kotlin, Android, AndroidX Media3 |
+| Deployment | Vercel configuration |
+| CI | GitHub Actions Android build workflow |
 
-## 📁 Repository tour
+## 🚀 Run locally
 
-```text
-watchwise-fire-tv/
-├── app/                         # Native Android / Fire TV client
-├── backend/
-│   ├── api/                     # Vercel serverless API entry points
-│   ├── public/
-│   │   └── index.html           # Responsive browser preview
-│   ├── src/
-│   │   ├── server.js            # Express routes and recommendation logic
-│   │   └── catalogue.js         # Demo catalogue
-│   ├── .env.example             # Backend configuration template
-│   └── package.json
-├── docs/
-│   ├── watchwise-banner.svg     # Original README artwork
-│   └── fire-tv-demo-guide.md    # Build, testing, and demo plan
-├── .github/workflows/           # Android build workflow
-├── LICENSE
-└── README.md
-```
+### Requirements
 
-## 🚀 Get started
+- Node.js 18 or newer
+- npm
+- A TMDB API key to enable live trending series and trailer lookup
+- Optional AI-compatible API credentials for AI-assisted recommendations
 
-### 1. Try the browser preview
-
-Open **[watchwise-fire-tv.vercel.app](https://watchwise-fire-tv.vercel.app/)**.
-
-The preview is intended to demonstrate catalogue browsing, search, genre filters, favorites, recommendations, and a video modal. If the deployed site is still loading indefinitely, the deployment or API path needs to be checked; a successful deployment status alone does not prove the app works end-to-end.
-
-### 2. Run the backend locally
-
-Requirements: **Node.js 18+** and npm.
+### 1. Start the backend
 
 ```bash
 cd backend
@@ -139,18 +129,42 @@ cp .env.example .env
 npm start
 ```
 
-On Windows PowerShell, use:
+On Windows PowerShell, copy the environment template with:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-The server starts on port `3000` by default. Check the health route and catalogue:
+Set your keys in `backend/.env`:
+
+```dotenv
+TMDB_API_KEY=your_tmdb_api_key
+# Optional:
+AI_API_KEY=your_ai_api_key
+# Optional overrides:
+# AI_BASE_URL=https://api.openai.com/v1
+# AI_MODEL=gpt-4o-mini
+```
+
+**Never commit real API keys.** Configure production secrets in Vercel Environment Variables, then redeploy.
+
+### 2. Open the browser app
+
+Visit [http://localhost:3000](http://localhost:3000).
+
+Useful checks:
 
 ```bash
 curl http://localhost:3000/health
 curl http://localhost:3000/api/titles
 curl http://localhost:3000/api/genres
+curl http://localhost:3000/api/trending-series
+```
+
+Fetch a trailer for a series using its TMDB series ID:
+
+```bash
+curl http://localhost:3000/api/trending-series/SERIES_ID/trailer
 ```
 
 Request recommendations:
@@ -161,93 +175,84 @@ curl -X POST http://localhost:3000/api/recommendations \
   -d '{"genres":["Family","Adventure"],"maxDurationMinutes":15,"language":"English"}'
 ```
 
-### 3. Build the Android app
+### 3. Build the Android client
 
-1. Install Android Studio and a compatible JDK 17.
-2. Install Android SDK Platform 35 and the required Build Tools.
-3. Open the repository root in Android Studio and allow Gradle sync.
-4. Build the `app` configuration, or use Gradle 8.9 and run:
+1. Install Android Studio and JDK 17.
+2. Install the SDK platform and build tools required by the project.
+3. Open the repository root in Android Studio and sync Gradle.
+4. Build the debug variant or run `gradle assembleDebug` if Gradle is configured on your machine.
+5. Test on the target Fire TV device or a suitable emulator. A successful generic Android build alone does not confirm Fire TV compatibility.
 
-   ```bash
-   gradle assembleDebug
-   ```
-
-5. The expected debug APK path is `app/build/outputs/apk/debug/app-debug.apk`.
-
-A GitHub Actions workflow attempts the debug build on pushes and pull requests. If it succeeds, download the `watchwise-tv-debug-apk` artifact from the workflow run.
-
-> A generic Android emulator is useful for development, but it does not establish Fire TV platform compatibility. Follow the [Fire TV demo guide](docs/fire-tv-demo-guide.md) for target-device testing.
-
-## 🔌 API quick reference
+## 🔌 API reference
 
 | Method | Endpoint | Purpose |
 |---|---|---|
 | `GET` | `/health` | Health status and AI configuration flag |
-| `GET` | `/api/titles` | List titles; optional `genre` and `q` query filters |
-| `GET` | `/api/titles/:id` | Fetch a title by ID |
-| `GET` | `/api/genres` | List catalogue genres |
-| `POST` | `/api/recommendations` | Return recommendations from local logic or optional AI |
-| `GET` | `/api-info` | Describe available API endpoints |
+| `GET` | `/api/titles` | List catalogue titles; supports optional genre and text query filters |
+| `GET` | `/api/titles/:id` | Fetch a catalogue title |
+| `GET` | `/api/genres` | List genres |
+| `GET` | `/api/trending-series` | Fetch trending TV series from TMDB |
+| `GET` | `/api/trending-series/:id/trailer` | Look up a YouTube trailer for a TMDB series ID |
+| `POST` | `/api/recommendations` | Return local or optional AI-assisted recommendations |
+| `GET` | `/api-info` | Describe API endpoints |
 
-For the deployed routes, replace `http://localhost:3000` with the base URL `https://watchwise-fire-tv.vercel.app`.
+For production, replace the local base URL with [https://watchwise-fire-tv.vercel.app](https://watchwise-fire-tv.vercel.app).
 
-## 🧠 Optional AI recommendations
+## 🔐 Configuration & notes
 
-Without an AI key, recommendations use deterministic local logic. To enable an OpenAI-compatible provider, set the following in `backend/.env`:
+- Keep all provider credentials on the server, never in browser JavaScript or the native client.
+- Trending data and trailer availability depend on TMDB metadata and API availability.
+- YouTube controls whether a video can be embedded; not every video permits embedding.
+- Streaming-service cards are external links, not integrated playback.
+- Use official trailers and respect the rights and terms that apply to each provider.
 
-```env
-AI_API_KEY=your_provider_key
-AI_BASE_URL=https://api.openai.com/v1
-AI_MODEL=gpt-4o-mini
+## 🗂️ Repository layout
+
+```text
+watchwise-fire-tv/
+├── app/                         # Native Android / Fire TV client
+├── backend/
+│   ├── api/                     # Vercel serverless entry points
+│   ├── public/
+│   │   └── index.html           # Browser preview
+│   ├── src/
+│   │   ├── server.js            # API routes
+│   │   └── catalogue.js         # Sample catalogue
+│   ├── .env.example
+│   └── package.json
+├── docs/
+│   ├── screenshots/             # README screenshots
+│   ├── watchwise-banner.svg
+│   └── fire-tv-demo-guide.md
+├── .github/workflows/
+├── LICENSE
+└── README.md
 ```
 
-Use a provider endpoint/model you are authorized to access. **Never commit `.env`, put secrets in the browser, or embed an AI key in the Android app.** If AI is not configured, the app should still be able to use local recommendations.
+## 🛣️ Roadmap
 
-## 🎬 Demo media
-
-The catalogue uses public sample video URLs for development. These URLs can change, become unavailable, or have usage restrictions. Verify playback and the applicable licensing/attribution terms before a public demo or distribution. Replace demo URLs with media you own or have permission to stream.
-
-## ✅ Before calling it demo-ready
-
-- [ ] Install/build the Android app successfully.
-- [ ] Verify it launches on the intended Fire TV device or accepted simulator.
-- [ ] Navigate the interface using only the remote.
-- [ ] Test search, genres, favorites, Details, Back, and focus visibility.
-- [ ] Test playback, pause, seek, exit, and the failure state.
-- [ ] Confirm `/health`, `/api/titles`, and `/api/recommendations` work.
-- [ ] Test both local recommendation fallback and AI mode if configured.
-- [ ] Verify the browser preview in a clean browser session.
-- [ ] Record the actual target-platform demo and include it in the submission if required.
-
-## 🗺️ Roadmap
-
-- [x] Shared catalogue and recommendation API
-- [x] Browser preview for quick review
+- [x] Search, genre filters, and favorites
+- [x] Trending TV-series section
+- [x] YouTube trailer lookup and embedded playback
 - [x] Local recommendation fallback
-- [x] Favorites and catalogue filters in the browser preview
-- [ ] Confirm stable production deployment and API routing
-- [ ] Complete native build and remote-only device testing
-- [ ] Capture real screenshots from the verified target device
-- [ ] Record a concise end-to-end demo
+- [ ] Automated tests for API routes and player flows
+- [ ] Verify all trailer buttons against live deployment
+- [ ] Validate navigation and playback on target Fire TV hardware
 
 ## 🤝 Contributing
 
-1. Fork the repository and create a focused feature branch.
-2. Keep secrets and personal credentials out of commits.
-3. Test both the browser experience and API routes for changes that affect discovery.
-4. For native UI changes, check remote navigation, focus visibility, and Back behavior.
-5. Open a pull request with a concise summary and test evidence.
+Issues and pull requests are welcome. Please include clear reproduction steps for bugs and avoid committing secrets, downloaded copyrighted media, build outputs, or local environment files.
 
 ## 📄 License
 
-Released under the [MIT License](LICENSE).
+Distributed under the [MIT License](LICENSE), unless otherwise noted for third-party assets and services.
 
 ---
 
 <div align="center">
 
-**WatchWise TV** · Find the next thing worth watching.
+**WatchWise TV** · Discover something worth watching.
 
-<sub>Built as a TV-first discovery prototype. Please verify build, playback, deployment, and target-device behavior before presenting it as production-ready.</sub>
+<a href="https://watchwise-fire-tv.vercel.app/">Live preview ↗</a>
 
 </div>
