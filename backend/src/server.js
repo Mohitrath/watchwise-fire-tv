@@ -70,4 +70,7 @@ app.post('/api/recommendations', async (req, res) => {
 });
 
 app.use((err, _req, res, _next) => { console.error(err); res.status(500).json({ error: 'Internal server error' }); });
-app.listen(port, '0.0.0.0', () => console.log(`WatchWise API listening on ${port}`));
+if (!process.env.VERCEL) app.listen(port, '0.0.0.0', () => console.log(`WatchWise API listening on ${port}`));
+
+export { app };
+export default app;
