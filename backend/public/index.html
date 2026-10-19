@@ -39,7 +39,7 @@ const $=id=>document.getElementById(id);
 const icons={Family:"✦",Adventure:"⛰",Education:"✧",Nature:"❋",Comedy:"☻"};
 function notify(msg){$("toast").textContent=msg;$("toast").classList.remove("hidden");setTimeout(()=>$("toast").classList.add("hidden"),2300)}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-async function api(path,opts={}){const res=await fetch(API+path,{headers:{"Content-Type":"application/json",...(opts.headers||{})},...opts});if(!res.ok)throw new Error("API request failed ("+res.status+")");return res.json()}
+async function api(path,opts={}){const res=await fetch(API+path,{headers:{"Content-Type":"application/json",...(opts.headers||{})},signal:AbortSignal.timeout(8000),...opts});if(!res.ok)throw new Error("API request failed ("+res.status+")");return res.json()}
 function visibleTitles(){const q=$("search").value.trim().toLowerCase();return state.titles.filter(t=>(state.genre==="All"||t.genre===state.genre)&&(!state.favoritesOnly||state.favorites.has(t.id))&&(!q||[t.name,t.genre,t.description].join(" ").toLowerCase().includes(q)))}
 function renderGenres(){const genres=["All",...new Set(state.titles.map(t=>t.genre))];$("genres").innerHTML=genres.map(g=>'<button class="'+(state.genre===g?"active":"")+'" data-genre="'+esc(g)+'">'+esc(g)+'</button>').join("");$("genres").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{state.genre=b.dataset.genre;renderGenres();renderTitles()}))}
 function renderTitles(){const list=visibleTitles();$("count").textContent=list.length+" title"+(list.length===1?"":"s");$("grid").innerHTML=list.length?list.map(t=>'<article class="tile"><div class="poster" aria-hidden="true">'+(icons[t.genre]||"✦")+'</div><div class="meta">'+esc(t.genre)+' · '+esc(t.duration)+' min</div><h3>'+esc(t.name)+'</h3><p>'+esc(t.description)+'</p><div class="tile-actions"><button class="primary" data-play="'+esc(t.id)+'">▶ Play</button><button data-fav="'+esc(t.id)+'" aria-pressed="'+state.favorites.has(t.id)+'">'+(state.favorites.has(t.id)?"★ Saved":"☆ Save")+'</button></div></article>').join(""):'<div class="empty">No titles match this filter. Try a different search or genre.</div>';
@@ -47,7 +47,27 @@ $("grid").querySelectorAll("[data-play]").forEach(b=>b.addEventListener("click",
 function toggleFavorite(id){state.favorites.has(id)?state.favorites.delete(id):state.favorites.add(id);localStorage.setItem("watchwise-favorites",JSON.stringify([...state.favorites]));$("favoritesBtn").textContent=state.favoritesOnly?"★ Favorites":"☆ Favorites";renderTitles();notify(state.favorites.has(id)?"Added to favorites":"Removed from favorites")}
 function playTitle(id){const t=state.titles.find(x=>x.id===id);if(!t)return;const v=$("video");$("playerTitle").textContent=t.name;$("playerNote").textContent="Sample stream · "+t.genre+" · "+t.duration+" minutes";v.pause();v.removeAttribute("src");v.load();v.src=t.videoUrl||"";$("playerDialog").showModal();if(t.videoUrl)v.play().catch(()=>{$("playerNote").textContent="Press Play in the video controls. If unavailable, verify the sample stream URL and network access."})}
 async function recommend(){const btn=$("recommendBtn");btn.disabled=true;btn.textContent="Finding picks…";try{const genres=state.genre!=="All"?[state.genre]:["Family","Adventure"];const data=await api("/api/recommendations",{method:"POST",body:JSON.stringify({genres,maxDurationMinutes:30,language:"English"})});const recs=data.recommendations||[];$("rec-source").textContent=data.source==="ai"?"AI-assisted":"Smart catalogue picks";$("rec-list").innerHTML=recs.length?recs.map(r=>{const t=state.titles.find(x=>x.id===r.titleId);return t?'<article class="rec"><strong>'+esc(t.name)+' · '+esc(t.genre)+'</strong><small>'+esc(r.reason||t.description)+'</small><div style="margin-top:10px"><button class="primary" data-rec-play="'+esc(t.id)+'">▶ Play this</button></div></article>':""}).join(""):'<div class="empty">No matches yet. Try another genre.</div>';$("rec-list").querySelectorAll("[data-rec-play]").forEach(b=>b.addEventListener("click",()=>playTitle(b.dataset.recPlay)));$("recommendations").classList.remove("hidden");$("recommendations").scrollIntoView({behavior:"smooth",block:"start"})}catch(e){notify("Recommendations are temporarily unavailable");}finally{btn.disabled=false;btn.textContent="✦ Recommend for me"}}
-async function load(){ $("status").textContent="Connecting to catalogue…";try{const data=await api("/api/titles");if(!Array.isArray(data.titles))throw new Error("Invalid catalogue");state.titles=data.titles;$("status").textContent="Connected · "+state.titles.length+" titles";renderGenres();renderTitles()}catch(e){$("status").textContent="Connection issue · retry refresh";$("grid").innerHTML='<div class="empty">Could not load the catalogue. Check the backend deployment and refresh.</div>';}}
+async function load(){
+ $("status").textContent="Connecting to catalogue…";
+ try {
+  const data=await api("/api/titles");
+  if(!Array.isArray(data.titles)) throw new Error("Invalid catalogue");
+  state.titles=data.titles;
+  $("status").textContent="Connected · "+state.titles.length+" titles from API";
+ } catch(e) {
+  state.titles=[
+   {id:"demo-001",name:"The Little Inventor",genre:"Education",description:"A curious young inventor learns through experiments and teamwork.",duration:8,videoUrl:"https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"},
+   {id:"demo-002",name:"Mountain Quest",genre:"Adventure",description:"Explore breathtaking landscapes on a light-hearted journey.",duration:10,videoUrl:"https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"},
+   {id:"demo-003",name:"Ocean Neighbors",genre:"Nature",description:"Meet fascinating creatures living beneath the waves.",duration:12,videoUrl:"https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"},
+   {id:"demo-004",name:"Family Game Night",genre:"Family",description:"A cheerful short about friends solving a puzzle together.",duration:6,videoUrl:"https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"},
+   {id:"demo-005",name:"Tiny Trailblazers",genre:"Adventure",description:"Young explorers solve clues in a colourful outdoor adventure.",duration:14,videoUrl:"https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"},
+   {id:"demo-006",name:"Laugh Lab",genre:"Comedy",description:"Everyday science turns into a series of funny surprises.",duration:7,videoUrl:"https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"}
+  ];
+  $("status").textContent="Offline mode · built-in catalogue";
+  notify("Backend unavailable; showing built-in sample titles");
+ }
+ renderGenres();renderTitles();
+}
 $("search").addEventListener("input",renderTitles);$("favoritesBtn").addEventListener("click",()=>{state.favoritesOnly=!state.favoritesOnly;$("favoritesBtn").setAttribute("aria-pressed",String(state.favoritesOnly));$("favoritesBtn").textContent=state.favoritesOnly?"★ Favorites only":"☆ Favorites";renderTitles()});$("refreshBtn").addEventListener("click",load);$("recommendBtn").addEventListener("click",recommend);$("browseBtn").addEventListener("click",()=>$("catalogue").scrollIntoView({behavior:"smooth"}));$("closePlayer").addEventListener("click",()=>{$("video").pause();$("playerDialog").close()});$("playerDialog").addEventListener("close",()=>{$("video").pause();$("video").removeAttribute("src");$("video").load()});load();
 </script>
 </body></html>
