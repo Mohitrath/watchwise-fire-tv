@@ -41,16 +41,38 @@ Finding something good to watch shouldn't mean endlessly scrolling. WatchWise br
 | **Streaming shortcuts** | Jump to external streaming services. Playback and regional availability are managed by each provider. |
 | **Demo fallback** | Sample titles keep the browser interface useful if the API is unavailable. |
 
-## Screenshots
+## Visual gallery
 
-The README previously referenced screenshot paths that were not present in the repository, which caused broken-image icons. To keep this version clean, it does not embed missing image files.
+A cinematic moodboard for the WatchWise experience. These are illustrative movie-night visuals, **not screenshots of the live interface**.
 
-When the screenshots are committed, add them under `docs/screenshots/` and insert them here:
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <strong>01 · Settle in and discover</strong><br/>
+      <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1000&q=85" alt="Cinema auditorium with rows of seats and a large screen" width="100%"/>
+      <sub>A cinema-inspired discovery experience.</sub>
+    </td>
+    <td width="50%" align="center">
+      <strong>02 · Series night</strong><br/>
+      <img src="https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=1000&q=85" alt="Modern television in a living room" width="100%"/>
+      <sub>Built around the big-screen viewing experience.</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <strong>03 · Your streaming corner</strong><br/>
+      <img src="https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?auto=format&fit=crop&w=1000&q=85" alt="Home entertainment setup with a television" width="100%"/>
+      <sub>Keep discovery and streaming shortcuts together.</sub>
+    </td>
+    <td width="50%" align="center">
+      <strong>04 · Movie mood</strong><br/>
+      <img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=1000&q=85" alt="Film production camera in a dark cinematic setting" width="100%"/>
+      <sub>Find the next story worth watching.</sub>
+    </td>
+  </tr>
+</table>
 
-- `docs/screenshots/01-home.png` — Home and discovery
-- `docs/screenshots/02-trending-series.png` — Trending series
-- `docs/screenshots/03-streaming-platforms.png` — Streaming shortcuts
-- `docs/screenshots/04-catalogue-filters.png` — Catalogue and filters
+> These images are loaded from Unsplash via external URLs, so no image files need to be uploaded to this repository. Actual WatchWise UI screenshots can be added here later.
 
 ## Architecture
 
