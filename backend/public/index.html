@@ -153,7 +153,7 @@ dialog::backdrop{background:rgba(3,5,12,.78);backdrop-filter:blur(12px)}
 const API=location.origin;
 const state={titles:[],type:"Movies",category:"All",genre:"All",favoritesOnly:false,favorites:new Set(JSON.parse(localStorage.getItem("watchwise-favorites")||"[]"))};
 const $=id=>document.getElementById(id);
-const icons={Family:"✦",Adventure:"⛰",Education:"✧",Nature:"❋",Comedy:"☻",Action:"⚡",Animation:"🎬",Drama:"🎭"};
+const icons={Family:"���",Adventure:"⛰",Education:"✧",Nature:"❋",Comedy:"☻",Action:"⚡",Animation:"🎬",Drama:"🎭"};
 function notify(msg){$("toast").textContent=msg;$("toast").classList.remove("hidden");setTimeout(()=>$("toast").classList.add("hidden"),2300)}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 async function api(path,opts={}){const res=await fetch(API+path,{headers:{"Content-Type":"application/json",...(opts.headers||{})},signal:AbortSignal.timeout(8000),...opts});if(!res.ok)throw new Error("API request failed ("+res.status+")");return res.json()}
@@ -271,4 +271,8 @@ async function load(){
 }
 $("contentTabs").querySelectorAll("[data-type]").forEach(b=>b.addEventListener("click",()=>changeType(b.dataset.type)));$("categories").querySelectorAll("[data-category]").forEach(b=>b.addEventListener("click",()=>{state.category=b.dataset.category;state.genre="All";renderCategoryNav();renderGenres();renderTitles()}));$("search").addEventListener("input",renderTitles);$("favoritesBtn").addEventListener("click",()=>{state.favoritesOnly=!state.favoritesOnly;$("favoritesBtn").setAttribute("aria-pressed",String(state.favoritesOnly));$("favoritesBtn").textContent=state.favoritesOnly?"★ Favorites only":"☆ Favorites";renderTitles()});$("refreshBtn").addEventListener("click",load);$("refreshTrending").addEventListener("click",loadTrendingSeries);$("recommendBtn").addEventListener("click",recommend);$("browseBtn").addEventListener("click",()=>$("catalogue").scrollIntoView({behavior:"smooth"}));$("closePlayer").addEventListener("click",()=>{$("video").pause();$("trailerFrame").src="";$("playerDialog").close()});$("playerDialog").addEventListener("close",()=>{$("video").pause();$("video").removeAttribute("src");$("video").load();$("trailerFrame").src="";$("trailerFrame").classList.add("hidden");$("trailerFallback").classList.add("hidden");$("video").classList.remove("hidden")});load();loadTrendingSeries();
 </script>
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body></html>
