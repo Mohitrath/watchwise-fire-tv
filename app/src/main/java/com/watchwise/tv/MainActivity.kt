@@ -78,7 +78,7 @@ class MainActivity : Activity() {
     }
 
     private fun render() {
-        val genres = listOf("All", "Family", "Adventure", "Education", "Nature", "Comedy", "Favorites")
+        val genres = listOf("All", "Family", "Adventure", "Education", "Nature", "Comedy", "Action", "Animation", "Drama", "Favorites")
         val genreRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
         genres.forEach { genre ->
             val b = makeButton(if (selectedGenre == genre) "✓ $genre" else genre) {
