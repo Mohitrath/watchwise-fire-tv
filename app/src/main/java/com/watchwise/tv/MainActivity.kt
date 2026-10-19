@@ -137,11 +137,12 @@ class MainActivity : Activity() {
     }
 
     private fun openTrailer(title: WatchTitle) {
-        try {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(title.trailerUrl)))
-        } catch (e: Exception) {
-            AlertDialog.Builder(this).setTitle("Trailer unavailable").setMessage("No app can open this trailer link on this device.").setPositiveButton("OK", null).show()
-        }
+        // Open trailer pages in WatchWise's own player screen.
+        startActivity(
+            Intent(this, PlayerActivity::class.java)
+                .putExtra("title", title.name)
+                .putExtra("trailerUrl", title.trailerUrl)
+        )
     }
 
     private fun play(title: WatchTitle) {
