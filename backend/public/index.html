@@ -101,7 +101,7 @@ async function load(){
   $("status").textContent="Offline mode · built-in catalogue";
   notify("Backend unavailable; showing built-in sample titles");
  }
- renderGenres();renderTitles();
+ renderCategoryNav();renderGenres();renderTitles();
 }
 $("contentTabs").querySelectorAll("[data-type]").forEach(b=>b.addEventListener("click",()=>changeType(b.dataset.type)));$("categories").querySelectorAll("[data-category]").forEach(b=>b.addEventListener("click",()=>{state.category=b.dataset.category;state.genre="All";renderCategoryNav();renderGenres();renderTitles()}));$("search").addEventListener("input",renderTitles);$("favoritesBtn").addEventListener("click",()=>{state.favoritesOnly=!state.favoritesOnly;$("favoritesBtn").setAttribute("aria-pressed",String(state.favoritesOnly));$("favoritesBtn").textContent=state.favoritesOnly?"★ Favorites only":"☆ Favorites";renderTitles()});$("refreshBtn").addEventListener("click",load);$("recommendBtn").addEventListener("click",recommend);$("browseBtn").addEventListener("click",()=>$("catalogue").scrollIntoView({behavior:"smooth"}));$("closePlayer").addEventListener("click",()=>{$("video").pause();$("trailerFrame").src="";$("playerDialog").close()});$("playerDialog").addEventListener("close",()=>{$("video").pause();$("video").removeAttribute("src");$("video").load();$("trailerFrame").src="";$("trailerFrame").classList.add("hidden");$("trailerFallback").classList.add("hidden");$("video").classList.remove("hidden")});load();
 </script>
