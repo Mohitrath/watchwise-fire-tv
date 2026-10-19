@@ -44,7 +44,9 @@ class PlayerActivity : Activity() {
             webView = web
             web.settings.javaScriptEnabled = true
             web.settings.domStorageEnabled = true
-            web.settings.mediaPlaybackRequiresUserGesture = false
+            web.settings.mediaPlaybackRequiresUserGesture = true
+            web.settings.loadsImagesAutomatically = true
+            web.settings.setSupportMultipleWindows(false)
             web.webChromeClient = WebChromeClient()
             web.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) { message.text = "$title · YouTube trailer" }
@@ -59,8 +61,8 @@ class PlayerActivity : Activity() {
             setContentView(layout)
             val id = youtubeId(trailerUrl)
             if (id != null) {
-                val html = "<!doctype html><html><head><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><style>html,body{margin:0;background:#000;width:100%;height:100%;overflow:hidden}iframe{position:absolute;inset:0;width:100%;height:100%;border:0}</style></head><body><iframe src=\"https://www.youtube.com/embed/$id?playsinline=1&autoplay=0&rel=0\" title=\"YouTube trailer\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen referrerpolicy=\"strict-origin-when-cross-origin\"></iframe></body></html>"
-                web.loadDataWithBaseURL("https://www.youtube.com/", html, "text/html", "UTF-8", null)
+                val html = "<!doctype html><html><head><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><style>html,body{margin:0;background:#000;width:100%;height:100%;overflow:hidden}iframe{position:absolute;inset:0;width:100%;height:100%;border:0}</style></head><body><iframe src=\"https://www.youtube-nocookie.com/embed/$id?playsinline=1&autoplay=0&rel=0&origin=https%3A%2F%2Fwatchwise-fire-tv.vercel.app\" title=\"YouTube trailer\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen referrerpolicy=\"strict-origin-when-cross-origin\"></iframe></body></html>"
+                web.loadDataWithBaseURL("https://watchwise-fire-tv.vercel.app/", html, "text/html", "UTF-8", null)
             } else {
                 web.loadUrl(trailerUrl)
             }
