@@ -65,27 +65,28 @@ function youtubeVideoId(url){
 function playTitle(id){
  const t=state.titles.find(x=>x.id===id);if(!t)return;
  const v=$("video"),frame=$("trailerFrame");$("playerTitle").textContent=t.name;
- v.pause();v.onerror=null;v.onloadedmetadata=null;v.oncanplay=null;v.removeAttribute("src");v.load();frame.src="";frame.classList.add("hidden");$("trailerFallback").classList.add("hidden");v.classList.remove("hidden");$("playerNote").textContent="Preparing player…";
+ v.pause();v.onerror=null;v.onloadedmetadata=null;v.oncanplay=null;v.removeAttribute("src");v.load();frame.src="";frame.classList.add("hidden");$("trailerFallback").classList.add("hidden");v.classList.remove("hidden");$("playerNote").textContent="Preparing WatchWise player…";
  if(t.trailerUrl){
   const videoId=youtubeVideoId(t.trailerUrl);
-  $("openTrailerExternal").onclick=()=>window.open(videoId?"https://www.youtube.com/watch?v="+encodeURIComponent(videoId):t.trailerUrl,"_blank","noopener,noreferrer");
-  $("trailerFallback").classList.remove("hidden");
-  if(videoId){
-   v.classList.add("hidden");frame.classList.remove("hidden");
-   frame.referrerPolicy="strict-origin-when-cross-origin";
-   frame.setAttribute("allow","accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
-   frame.src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(videoId)+"?playsinline=1&autoplay=0&rel=0&origin="+encodeURIComponent(location.origin);
-   $("playerNote").textContent="Trailer embedded from YouTube. If YouTube blocks this video, use Open trailer on YouTube."; 
-  }else{v.classList.add("hidden");$("playerNote").textContent="This entry is a YouTube search link, not a specific video. Use Open trailer on YouTube to view results.";}
+  if(!videoId){
+   v.classList.add("hidden");
+   $("playerNote").textContent="This title currently has a trailer search link, not a direct video. To keep playback inside WatchWise TV, add a specific embeddable YouTube video ID or a licensed MP4/HLS stream. No external tab will be opened.";
+   $("playerDialog").showModal();return;
+  }
+  v.classList.add("hidden");frame.classList.remove("hidden");
+  frame.referrerPolicy="strict-origin-when-cross-origin";
+  frame.setAttribute("allow","accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+  frame.src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(videoId)+"?playsinline=1&autoplay=0&rel=0&origin="+encodeURIComponent(location.origin);
+  $("playerNote").textContent="Playing the embedded trailer inside WatchWise TV. Some YouTube videos may disable embedding or have regional restrictions.";
   $("playerDialog").showModal();return;
  }
- $("playerNote").textContent="Loading sample stream · "+t.genre;
- v.onerror=()=>{$("playerNote").textContent="This source could not be played in the browser. The host may block playback or the video may be unavailable.";};
+ $("playerNote").textContent="Loading stream inside WatchWise TV · "+t.genre;
+ v.onerror=()=>{$("playerNote").textContent="This video host refused playback or the stream is unavailable. Use a direct, browser-compatible MP4/HLS URL or an embeddable YouTube video ID.";};
  v.onloadedmetadata=()=>{$("playerNote").textContent="Ready · "+t.genre+" · "+t.duration+" min";};
  v.oncanplay=()=>{$("playerNote").textContent="Ready to play · "+t.name;};
- if(!t.videoUrl){$("playerNote").textContent="No direct video stream is configured for this title yet.";$("playerDialog").showModal();return;}
+ if(!t.videoUrl){$("playerNote").textContent="No embeddable video stream is configured for this title yet.";$("playerDialog").showModal();return;}
  v.src=t.videoUrl;v.load();$("playerDialog").showModal();
- v.play().catch(()=>{$("playerNote").textContent="Press Play to start. If playback fails, the source may block browser playback.";});
+ v.play().catch(()=>{$("playerNote").textContent="Press Play to start. Playback remains inside WatchWise TV; if it fails, this stream may block embedding or be unavailable.";});
 }
 function renderCategoryNav(){const movieMode=state.type==="Movies";$("categories").classList.toggle("hidden",!movieMode);$("subnavLabel").classList.toggle("hidden",!movieMode);$("contentTabs").querySelectorAll("[data-type]").forEach(b=>b.classList.toggle("active",b.dataset.type===state.type));$("categories").querySelectorAll("[data-category]").forEach(b=>b.classList.toggle("active",b.dataset.category===state.category));$("catalogue-title").textContent=state.favoritesOnly?"Your favorites":(state.type==="Series"?"Series to watch":(state.category==="All"?"Movies to watch":state.category+" movies"));}function changeType(type){state.type=type;state.category="All";state.genre="All";renderCategoryNav();renderGenres();renderTitles()}function toggleFavorite(id){state.favorites.has(id)?state.favorites.delete(id):state.favorites.add(id);localStorage.setItem("watchwise-favorites",JSON.stringify([...state.favorites]));$("favoritesBtn").textContent=state.favoritesOnly?"★ Favorites":"☆ Favorites";renderTitles();notify(state.favorites.has(id)?"Added to favorites":"Removed from favorites")}
 
