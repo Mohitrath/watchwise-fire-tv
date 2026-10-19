@@ -74,7 +74,31 @@ dialog::backdrop{background:rgba(3,5,12,.78);backdrop-filter:blur(12px)}
 @media(max-width:390px){.grid{grid-template-columns:1fr}.streaming-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.tile,.streaming-card,button{transition:none!important}}
 
-</style>
+
+.trending-section{margin:34px 0;padding:clamp(18px,3vw,30px);border:1px solid rgba(167,139,250,.22);border-radius:22px;background:linear-gradient(135deg,rgba(23,25,44,.92),rgba(12,15,26,.94));box-shadow:0 20px 60px rgba(0,0,0,.18)}
+.trending-heading{display:flex;justify-content:space-between;align-items:center;margin:0 0 8px}
+.trending-heading h2{margin:5px 0 0}.trending-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.live-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid rgba(74,222,128,.25);border-radius:999px;background:rgba(34,197,94,.07);color:#86efac;font-size:10px;font-weight:900;letter-spacing:.13em}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 12px #4ade80}
+.trending-intro,.trending-foot{color:#9ba4bb;font-size:13px;line-height:1.7;max-width:850px}
+.trending-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:20px}
+.trend-card{overflow:hidden;min-width:0;border:1px solid rgba(255,255,255,.09);border-radius:15px;background:rgba(255,255,255,.035);transition:transform .2s,border-color .2s}
+.trend-card:hover{transform:translateY(-4px);border-color:rgba(167,139,250,.5)}
+.trend-art{position:relative;height:220px;background:linear-gradient(135deg,#25203d,#17233a);overflow:hidden}
+.trend-art img{width:100%;height:100%;object-fit:cover;display:block}
+.trend-rank{position:absolute;top:10px;left:10px;padding:6px 9px;border-radius:8px;background:rgba(8,10,18,.85);backdrop-filter:blur(8px);font-weight:900;color:#d9ceff;font-size:12px}
+.trend-body{padding:14px}.trend-title{font-size:16px;font-weight:850;line-height:1.3;margin:0 0 8px}
+.trend-meta{display:flex;justify-content:space-between;gap:8px;color:#a7aec2;font-size:11px;margin:0 0 10px}
+.trend-rating{color:#fbbf24;font-weight:900}
+.trend-analysis{padding:8px 9px;margin:10px 0;border-radius:8px;background:rgba(167,139,250,.09);color:#c9bbff;font-size:11px;font-weight:700}
+.trend-overview{color:#a7aec2;font-size:12px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:56px}
+.trend-card a{color:#c4b5fd;font-size:12px;font-weight:750;text-decoration:none}.trend-card a:hover{text-decoration:underline}
+.trending-status{padding:14px 16px;border:1px dashed rgba(255,255,255,.16);border-radius:12px;color:#b9c0d3;font-size:13px}
+.trending-status a{color:#c4b5fd}.trending-status.error{border-color:rgba(251,191,36,.3);color:#fde68a}
+@media(max-width:1000px){.trending-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.trend-art{height:190px}}
+@media(max-width:700px){.trending-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.trend-art{height:155px}.trend-body{padding:11px}.trend-title{font-size:14px}.trending-heading{align-items:flex-start;flex-direction:column;gap:10px}}
+@media(max-width:390px){.trending-grid{grid-template-columns:1fr}.trend-art{height:240px}}
+\n</style>
 </head>
 <body>
 <main class="wrap">
@@ -90,7 +114,18 @@ dialog::backdrop{background:rgba(3,5,12,.78);backdrop-filter:blur(12px)}
 <div class="actions"><button class="primary" id="recommendBtn">✦ Recommend for me</button><button id="browseBtn">Explore the catalogue ↓</button></div>
 </div>
 </section>
-<section class="streaming-section" aria-labelledby="streaming-title">
+
+<section id="trending" class="trending-section" aria-labelledby="trending-title">
+  <div class="section-head trending-heading">
+    <div><div class="eyebrow">Live discovery · refreshed from TMDB</div><h2 id="trending-title">Trending Series Right Now</h2></div>
+    <div class="trending-actions"><span id="trendingUpdated" class="live-pill"><span class="live-dot"></span> LIVE CHART</span><button id="refreshTrending" type="button">↻ Refresh</button></div>
+  </div>
+  <p class="trending-intro">Explore what's gaining attention today, with audience ratings, vote counts, release dates and a short data-based score read.</p>
+  <div id="trendingStatus" class="trending-status" role="status" aria-live="polite">Loading live trending series…</div>
+  <div id="trendingGrid" class="trending-grid"></div>
+  <p class="trending-foot">Trend rankings and ratings are supplied by TMDB and can change throughout the day. This is popularity analysis, not a guarantee of quality or a streaming availability listing.</p>
+</section>
+\n<section class="streaming-section" aria-labelledby="streaming-title">
 <div class="section-head"><h2 id="streaming-title">Explore streaming platforms</h2><small>Open a service to browse its available catalogue</small></div>
 <div class="streaming-grid">
 <a class="streaming-card" href="https://www.netflix.com/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit"><span class="stream-icon">N</span><strong>Netflix</strong><span>Movies & series ↗</span></a>
@@ -176,7 +211,29 @@ function renderRecommendations(recs,source){
  $("recommendations").classList.remove("hidden");
  $("recommendations").scrollIntoView({behavior:"smooth",block:"start"});
 }
-async function load(){
+
+async function loadTrendingSeries(){
+ const status=$("trendingStatus"),grid=$("trendingGrid"),updated=$("trendingUpdated");
+ status.classList.remove("error");status.textContent="Fetching today's trending TV series…";grid.innerHTML="";
+ try{
+  const data=await api("/api/trending-series");
+  if(!Array.isArray(data.results)||!data.results.length)throw new Error("No trending series returned.");
+  status.textContent="Showing "+data.results.length+" trending series · source: TMDB";
+  updated.innerHTML='<span class="live-dot"></span> LIVE · '+new Date(data.updatedAt||Date.now()).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+  grid.innerHTML=data.results.map(s=>{
+   const date=s.firstAirDate?new Date(s.firstAirDate+"T00:00:00").getFullYear():"Year n/a";
+   const rating=Number(s.rating||0).toFixed(1);
+   const poster=s.poster?'<img loading="lazy" alt="" src="'+esc(s.poster)+'">':"";
+   const overview=esc(s.overview||"No synopsis available.");
+   return '<article class="trend-card"><div class="trend-art">'+poster+'<span class="trend-rank">#'+esc(s.rank)+'</span></div><div class="trend-body"><h3 class="trend-title">'+esc(s.name)+'</h3><div class="trend-meta"><span>'+esc(date)+'</span><span class="trend-rating">★ '+esc(rating)+'</span></div><div class="trend-analysis">'+esc(s.analysis)+' · '+esc(Number(s.voteCount||0).toLocaleString())+' votes</div><p class="trend-overview">'+overview+'</p><a href="https://www.themoviedb.org/tv/'+encodeURIComponent(s.id)+'" target="_blank" rel="noopener noreferrer">Full series analysis ↗</a></div></article>';
+  }).join("");
+ }catch(e){
+  status.classList.add("error");
+  status.innerHTML='Live chart needs a TMDB API key in the backend environment. Add <code>TMDB_API_KEY</code> in Vercel → Project Settings → Environment Variables, then redeploy. Until then, <a href="https://www.justwatch.com/in/streaming-charts?t=shows" target="_blank" rel="noopener noreferrer">view current India streaming charts ↗</a>.';
+  updated.innerHTML='<span class="live-dot"></span> SETUP NEEDED';
+ }
+}
+\nasync function load(){
  $("status").textContent="Connecting to catalogue…";
  try {
   const data=await api("/api/titles");
@@ -209,6 +266,6 @@ async function load(){
  }
  renderCategoryNav();renderGenres();renderTitles();
 }
-$("contentTabs").querySelectorAll("[data-type]").forEach(b=>b.addEventListener("click",()=>changeType(b.dataset.type)));$("categories").querySelectorAll("[data-category]").forEach(b=>b.addEventListener("click",()=>{state.category=b.dataset.category;state.genre="All";renderCategoryNav();renderGenres();renderTitles()}));$("search").addEventListener("input",renderTitles);$("favoritesBtn").addEventListener("click",()=>{state.favoritesOnly=!state.favoritesOnly;$("favoritesBtn").setAttribute("aria-pressed",String(state.favoritesOnly));$("favoritesBtn").textContent=state.favoritesOnly?"★ Favorites only":"☆ Favorites";renderTitles()});$("refreshBtn").addEventListener("click",load);$("recommendBtn").addEventListener("click",recommend);$("browseBtn").addEventListener("click",()=>$("catalogue").scrollIntoView({behavior:"smooth"}));$("closePlayer").addEventListener("click",()=>{$("video").pause();$("trailerFrame").src="";$("playerDialog").close()});$("playerDialog").addEventListener("close",()=>{$("video").pause();$("video").removeAttribute("src");$("video").load();$("trailerFrame").src="";$("trailerFrame").classList.add("hidden");$("trailerFallback").classList.add("hidden");$("video").classList.remove("hidden")});load();
+$("contentTabs").querySelectorAll("[data-type]").forEach(b=>b.addEventListener("click",()=>changeType(b.dataset.type)));$("categories").querySelectorAll("[data-category]").forEach(b=>b.addEventListener("click",()=>{state.category=b.dataset.category;state.genre="All";renderCategoryNav();renderGenres();renderTitles()}));$("search").addEventListener("input",renderTitles);$("favoritesBtn").addEventListener("click",()=>{state.favoritesOnly=!state.favoritesOnly;$("favoritesBtn").setAttribute("aria-pressed",String(state.favoritesOnly));$("favoritesBtn").textContent=state.favoritesOnly?"★ Favorites only":"☆ Favorites";renderTitles()});$("refreshBtn").addEventListener("click",load);$("refreshTrending").addEventListener("click",loadTrendingSeries);$("recommendBtn").addEventListener("click",recommend);$("browseBtn").addEventListener("click",()=>$("catalogue").scrollIntoView({behavior:"smooth"}));$("closePlayer").addEventListener("click",()=>{$("video").pause();$("trailerFrame").src="";$("playerDialog").close()});$("playerDialog").addEventListener("close",()=>{$("video").pause();$("video").removeAttribute("src");$("video").load();$("trailerFrame").src="";$("trailerFrame").classList.add("hidden");$("trailerFallback").classList.add("hidden");$("video").classList.remove("hidden")});load();
 </script>
 </body></html>
