@@ -48,6 +48,7 @@ class MainActivity : Activity() {
         prefs = getSharedPreferences("watchwise", MODE_PRIVATE)
         buildShell()
         render()
+        loadBackendCatalogue()
     }
 
     private fun buildShell() {
@@ -148,7 +149,7 @@ class MainActivity : Activity() {
 
     private fun askRecommendations() {
         val genres = if (selectedGenre == "All" || selectedGenre == "Favorites") listOf("Family", "Adventure") else listOf(selectedGenre)
-        val endpoint = prefs.getString("backend_url", "").orEmpty().trim().trimEnd('/')
+        val endpoint = prefs.getString("backend_url", "https://watchwise-fire-tv.vercel.app").orEmpty().trim().trimEnd('/')
         if (endpoint.isBlank()) {
             val picks = titles.filter { it.genre in genres }.take(3).ifEmpty { titles.take(3) }
             AlertDialog.Builder(this).setTitle("Recommendations (local fallback)")
@@ -181,8 +182,51 @@ class MainActivity : Activity() {
         }
     }
 
+
+    private fun loadBackendCatalogue() {
+        val endpoint = prefs.getString("backend_url", "https://watchwise-fire-tv.vercel.app").orEmpty().trim().trimEnd('/')
+        if (endpoint.isBlank()) return
+        status.text = "Connecting to WatchWise catalogue…"
+        executor.execute {
+            var connection: HttpURLConnection? = null
+            try {
+                connection = (URL("$endpoint/api/titles").openConnection() as HttpURLConnection).apply {
+                    requestMethod = "GET"; connectTimeout = 5000; readTimeout = 7000
+                    setRequestProperty("Accept", "application/json")
+                }
+                if (connection.responseCode !in 200..299) throw IllegalStateException("HTTP ${connection.responseCode}")
+                val response = connection.inputStream.bufferedReader().use { it.readText() }
+                val array = JSONObject(response).optJSONArray("titles") ?: JSONArray()
+                val loaded = (0 until array.length()).mapNotNull { i ->
+                    val item = array.optJSONObject(i) ?: return@mapNotNull null
+                    val id = item.optString("id")
+                    val name = item.optString("name")
+                    if (id.isBlank() || name.isBlank()) return@mapNotNull null
+                    WatchTitle(
+                        id, name, item.optString("genre", "Featured"),
+                        item.optString("description", "A WatchWise pick."),
+                        item.optInt("duration", 10),
+                        item.optString("videoUrl", "")
+                    )
+                }
+                if (loaded.isEmpty()) throw IllegalStateException("The catalogue was empty")
+                runOnUiThread {
+                    titles = loaded
+                    status.text = "Connected · ${loaded.size} titles from WatchWise API"
+                    renderContent()
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    status.text = "Offline catalogue · using built-in titles"
+                }
+            } finally {
+                connection?.disconnect()
+            }
+        }
+    }
+
     private fun backendSettings() {
-        val input = EditText(this).apply { setSingleLine(true); hint = "https://your-backend.example.com"; setText(prefs.getString("backend_url", "")); setTextColor(Color.BLACK) }
+        val input = EditText(this).apply { setSingleLine(true); hint = "https://watchwise-fire-tv.vercel.app"; setText(prefs.getString("backend_url", "https://watchwise-fire-tv.vercel.app")); setTextColor(Color.BLACK) }
         AlertDialog.Builder(this).setTitle("Recommendation backend URL").setMessage("Enter the backend base URL without a trailing slash. For TV devices, localhost refers to the TV itself.").setView(input)
             .setPositiveButton("Save") { _, _ -> prefs.edit().putString("backend_url", input.text.toString().trim().trimEnd('/')).apply(); status.text = "Backend setting saved" }
             .setNeutralButton("Clear") { _, _ -> prefs.edit().remove("backend_url").apply(); status.text = "Using local recommendations" }
