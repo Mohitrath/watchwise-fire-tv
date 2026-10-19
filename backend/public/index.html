@@ -46,7 +46,27 @@ function renderTitles(){const list=visibleTitles();$("count").textContent=list.l
 $("grid").querySelectorAll("[data-play]").forEach(b=>b.addEventListener("click",()=>playTitle(b.dataset.play)));$("grid").querySelectorAll("[data-fav]").forEach(b=>b.addEventListener("click",()=>toggleFavorite(b.dataset.fav)))}
 function toggleFavorite(id){state.favorites.has(id)?state.favorites.delete(id):state.favorites.add(id);localStorage.setItem("watchwise-favorites",JSON.stringify([...state.favorites]));$("favoritesBtn").textContent=state.favoritesOnly?"★ Favorites":"☆ Favorites";renderTitles();notify(state.favorites.has(id)?"Added to favorites":"Removed from favorites")}
 function playTitle(id){const t=state.titles.find(x=>x.id===id);if(!t)return;const v=$("video");$("playerTitle").textContent=t.name;$("playerNote").textContent="Sample stream · "+t.genre+" · "+t.duration+" minutes";v.pause();v.removeAttribute("src");v.load();v.src=t.videoUrl||"";$("playerDialog").showModal();if(t.videoUrl)v.play().catch(()=>{$("playerNote").textContent="Press Play in the video controls. If unavailable, verify the sample stream URL and network access."})}
-async function recommend(){const btn=$("recommendBtn");btn.disabled=true;btn.textContent="Finding picks…";try{const genres=state.genre!=="All"?[state.genre]:["Family","Adventure"];const data=await api("/api/recommendations",{method:"POST",body:JSON.stringify({genres,maxDurationMinutes:30,language:"English"})});const recs=data.recommendations||[];$("rec-source").textContent=data.source==="ai"?"AI-assisted":"Smart catalogue picks";$("rec-list").innerHTML=recs.length?recs.map(r=>{const t=state.titles.find(x=>x.id===r.titleId);return t?'<article class="rec"><strong>'+esc(t.name)+' · '+esc(t.genre)+'</strong><small>'+esc(r.reason||t.description)+'</small><div style="margin-top:10px"><button class="primary" data-rec-play="'+esc(t.id)+'">▶ Play this</button></div></article>':""}).join(""):'<div class="empty">No matches yet. Try another genre.</div>';$("rec-list").querySelectorAll("[data-rec-play]").forEach(b=>b.addEventListener("click",()=>playTitle(b.dataset.recPlay)));$("recommendations").classList.remove("hidden");$("recommendations").scrollIntoView({behavior:"smooth",block:"start"})}catch(e){notify("Recommendations are temporarily unavailable");}finally{btn.disabled=false;btn.textContent="✦ Recommend for me"}}
+async function recommend(){
+ const btn=$("recommendBtn");btn.disabled=true;btn.textContent="Finding picks…";
+ try {
+  const genres=state.genre!=="All"?[state.genre]:["Family","Adventure"];
+  const data=await api("/api/recommendations",{method:"POST",body:JSON.stringify({genres,maxDurationMinutes:30,language:"English"})});
+  const recs=data.recommendations||[];
+  renderRecommendations(recs,data.source==="ai"?"AI-assisted":"Smart catalogue picks");
+ } catch(e) {
+  const genres=state.genre!=="All"?[state.genre]:["Family","Adventure"];
+  const picks=state.titles.filter(t=>genres.includes(t.genre)).slice(0,3);
+  renderRecommendations(picks.map(t=>({titleId:t.id,reason:t.description})),"Local fallback");
+  notify("Backend unavailable; showing local recommendations");
+ } finally {btn.disabled=false;btn.textContent="✦ Recommend for me"}
+}
+function renderRecommendations(recs,source){
+ $("rec-source").textContent=source;
+ $("rec-list").innerHTML=recs.length?recs.map(r=>{const t=state.titles.find(x=>x.id===r.titleId);return t?'<article class="rec"><strong>'+esc(t.name)+' · '+esc(t.genre)+'</strong><small>'+esc(r.reason||t.description)+'</small><div style="margin-top:10px"><button class="primary" data-rec-play="'+esc(t.id)+'">▶ Play this</button></div></article>':""}).join(""):'<div class="empty">No matches yet. Try another genre.</div>';
+ $("rec-list").querySelectorAll("[data-rec-play]").forEach(b=>b.addEventListener("click",()=>playTitle(b.dataset.recPlay)));
+ $("recommendations").classList.remove("hidden");
+ $("recommendations").scrollIntoView({behavior:"smooth",block:"start"});
+}
 async function load(){
  $("status").textContent="Connecting to catalogue…";
  try {
