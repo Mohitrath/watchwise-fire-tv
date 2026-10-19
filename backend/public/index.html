@@ -76,8 +76,8 @@ function playTitle(id){
   v.classList.add("hidden");frame.classList.remove("hidden");
   frame.referrerPolicy="strict-origin-when-cross-origin";
   frame.setAttribute("allow","accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
-  frame.src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(videoId)+"?playsinline=1&autoplay=0&rel=0&origin="+encodeURIComponent(location.origin);
-  $("playerNote").textContent="Playing the embedded trailer inside WatchWise TV. Some YouTube videos may disable embedding or have regional restrictions.";
+  frame.src="https://www.youtube.com/embed/"+encodeURIComponent(videoId)+"?playsinline=1&autoplay=0&rel=0&origin="+encodeURIComponent(location.origin);
+  $("playerNote").textContent="Loading the trailer inside WatchWise TV. If YouTube refuses embedding, this video cannot play in the embedded player.";
   $("playerDialog").showModal();return;
  }
  $("playerNote").textContent="Loading stream inside WatchWise TV · "+t.genre;
