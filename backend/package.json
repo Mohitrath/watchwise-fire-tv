@@ -4,9 +4,15 @@
   "private": true,
   "type": "module",
   "description": "Optional recommendation API for WatchWise TV",
-  "scripts": { "start": "node src/server.js", "dev": "node --watch src/server.js" },
-  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
