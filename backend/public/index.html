@@ -250,7 +250,20 @@ async function playSeriesTrailer(id,name,button){
   $("trailerFallback").classList.remove("hidden");
   $("openTrailerExternal").onclick=()=>window.open(data.url,"_blank","noopener,noreferrer");
   $("playerDialog").showModal();
- }catch(e){notify(e.message||"No trailer available for this series.");}
+ }catch(e){
+  if(String(e.message||"").includes("(404)")){
+   const searchUrl="https://www.youtube.com/results?search_query="+encodeURIComponent(name+" official trailer");
+   video.pause();video.classList.add("hidden");frame.classList.add("hidden");
+   $("playerTitle").textContent=name+" — Trailer";
+   $("playerNote").textContent="TMDB has no trailer listed for this series. Search YouTube for an official trailer instead.";
+   $("trailerFallback").classList.remove("hidden");
+   $("openTrailerExternal").textContent="Search YouTube ↗";
+   $("openTrailerExternal").onclick=()=>window.open(searchUrl,"_blank","noopener,noreferrer");
+   $("playerDialog").showModal();
+  }else{
+   notify(e.message||"Trailer service is unavailable. Please try again.");
+  }
+ }
  finally{button.disabled=false;button.textContent="▶ Watch trailer";}
 }
 
