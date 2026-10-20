@@ -91,7 +91,7 @@ app.get('/api/trending-series/:id/trailer', async (req, res) => {
   const apiKey = process.env.TMDB_API_KEY;
   const id = String(req.params.id || '');
   if (!apiKey) return res.status(503).json({ error: 'TMDB_API_KEY is not configured' });
-  if (!/^\\d{1,12}$/.test(id)) return res.status(400).json({ error: 'Invalid series ID' });
+  if (!/^[0-9]{1,12}$/.test(id)) return res.status(400).json({ error: 'Invalid series ID' });
   try {
     const response = await fetch(`https://api.themoviedb.org/3/tv/${encodeURIComponent(id)}/videos?api_key=${encodeURIComponent(apiKey)}&language=en-US`, { signal: AbortSignal.timeout(8000) });
     if (!response.ok) throw new Error(`TMDB returned HTTP ${response.status}`);
