@@ -14,12 +14,12 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       "default-src": ["'self'"],
-      "script-src": ["'self'", "'unsafe-inline'"],
+      "script-src": ["'self'", "'unsafe-inline'", "https://va.vercel-scripts.com"],
       "style-src": ["'self'", "'unsafe-inline'"],
       "img-src": ["'self'", "data:", "https:"],
       "media-src": ["'self'", "https:", "blob:"],
       "frame-src": ["https://www.youtube-nocookie.com", "https://www.youtube.com"],
-      "connect-src": ["'self'", "https:"],
+      "connect-src": ["'self'", "https:", "https://vitals.vercel-insights.com"],
       "font-src": ["'self'", "data:", "https:"],
       "object-src": ["'none'"],
       "base-uri": ["'self'"],
